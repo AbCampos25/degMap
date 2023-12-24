@@ -1,0 +1,518 @@
+----------------------VIEWS
+
+..............ADMIN......................
+
+___________________PAINEL Actividades
+<?php
+
+if (!isset($_SESSION['id_admin'])) {
+    url::redireciona('PaginasController');
+}
+?>
+<header>
+      <div class="nav1">
+          <a href="<?=URL?>"><div class="logo"><?=App_name?></div></a>
+          <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="<?=URL?>/usuarioController/logout"><li>sair</li></a></nav>
+      </div>
+      <div class="nav2">
+          <a href="">Painel do administrador</a>
+      </div>
+  </header>
+<section class="conteudo">
+   <nav class="menu-admin">
+      <a href="<?=URL?>/adminController">Degradações</a>
+      <a href="<?=URL?>/adminController/usuarios">Usuarios</a>
+      <a href="#Actividades" style="color: rgb(20,20,20)">Actividades</a>
+   </nav>
+   <div class="emitir">
+        <a href="">emitir relatório<i class="fa fa-download"></i></a>
+   </div>
+   <div class="lista-deg-admin">
+   <?php 
+        foreach ($dados as $sessao) {
+            ?>
+      <div class="deg">
+        <div class="detalhes">
+            <h3><?=$sessao->actividade?></h3>
+            <a href="<?=URL?>/usuarioController/perfil/<?=$sessao->fk_usuario_id?>">Usuario: <br> <h4><?=$sessao->fk_usuario_id?></h4></a>
+            <p>Data:</p>
+            <p><?=$sessao->data_registo?></p>
+        </div>
+        <div class="config">
+            <a href=""><i class="fa fa-trash"></i></a>
+        </div>
+      </div>            
+              <?php
+        }
+   ?>
+
+   </div>
+<?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+</section>
+
+_______________________PAINEL actividades2
+
+<?php
+
+if (!isset($_SESSION['id_admin'])) {
+    url::redireciona('PaginasController');
+}
+?>
+<header>
+      <div class="nav1">
+          <a href="<?=URL?>"><div class="logo"><?=App_name?></div></a>
+          <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="<?=URL?>/usuarioController/logout"><li>sair</li></a></nav>
+      </div>
+      <div class="nav2">
+          <a href="">Painel do administrador</a>
+      </div>
+  </header>
+<section class="conteudo">
+   <nav class="menu-admin">
+      <a href="<?=URL?>/adminController">Degradações</a>
+      <a href="<?=URL?>/adminController/usuarios">Usuarios</a>
+      <a href="#Actividades" style="color: rgb(20,20,20)">Actividades</a>
+   </nav>
+   <div class="emitir">
+        <a href="">emitir relatório<i class="fa fa-download"></i></a>
+   </div>
+   <div class="lista-deg-admin">
+   <?php 
+        $actividades=$dados['actividades'];
+        $usuario=$dados['usuario'];
+        
+        foreach ($actividades as $sessao) {
+            ?>
+      <div class="deg">
+        <div class="detalhes">
+            <h3><?=$sessao->actividade?></h3>
+            <a href="<?=URL?>/usuarioController/perfil/<?=$sessao->fk_usuario_id?>">Usuario: <br> <h4><?=$usuario->nome?></h4></a>
+            <p>Data:</p>
+            <p><?=$sessao->data_registo?></p>
+        </div>
+        <div class="config">
+            <a href=""><i class="fa fa-trash"></i></a>
+        </div>
+      </div>            
+              <?php
+        }
+   ?>
+
+   </div>
+<?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+</section>
+
+____________________PAINEL degs
+
+<?php
+
+if (!isset($_SESSION['id_admin'])) {
+    url::redireciona('PaginasController');
+}
+
+$degs= $dados['degs'];
+$usuarios= $dados['usuarios'];
+?>
+<header>
+      <div class="nav1">
+          <a href="<?=URL?>"><div class="logo"><?=App_name?></div></a>
+          <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="<?=URL?>/usuarioController/logout"><li>sair</li></a></nav>
+      </div>
+      <div class="nav2">
+          <a href="">Painel do administrador</a>
+      </div>
+  </header>
+<section class="conteudo">
+   <nav class="menu-admin">
+      <a href="#Degradações" style="color: rgb(20,20,20)">Degradações</a>
+      <a href="<?=URL?>/adminController/usuarios">Usuarios</a>
+      <a href="<?=URL?>/adminController/actividades">Actividades</a>
+   </nav>
+   <div class="emitir">
+        <a href="<?=URL?>/adminController/relatorioDegs">emitir relatório<i class="fa fa-download"></i></a>
+   </div>
+   <div class="lista-deg-admin">
+   <?php 
+        foreach ($degs as $deg) {
+            ?>
+      <div class="deg">
+        <div class="detalhes">
+            <h3><?=$deg->nome?></h3>
+            <a href="<?=URL?>/usuarioController/perfil/<?=$usuarios[$deg->fk_usuario_id]->id?>">cadastrado por: <br> <h4><?=$usuarios[$deg->fk_usuario_id]->nome?></h4></a>
+            <p>Data de registo:</p>
+            <p><?=$deg->data_registo?></p>
+        </div>
+        <div class="config">
+            <a href="<?=URL?>/degController/detalhes/<?=$deg->id?>"><i class="fa fa-eye"></i></a>
+            <a href=""><i class="fa fa-trash"></i></a>
+        </div>
+      </div>            
+              <?php
+        }
+   ?>
+
+   </div>
+   <?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+</section>
+
+____________________________PAINEL Usuarios
+
+<?php
+
+if (!isset($_SESSION['id_admin'])) {
+    url::redireciona('PaginasController');
+}
+?>
+<header>
+      <div class="nav1">
+          <a href="<?=URL?>"><div class="logo"><?=App_name?></div></a>
+          <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="<?=URL?>/usuarioController/logout"><li>sair</li></a></nav>
+      </div>
+      <div class="nav2">
+          <a href="">Painel do administrador</a>
+      </div>
+  </header>
+<section class="conteudo">
+   <nav class="menu-admin">
+      <a href="<?=URL?>/adminController">Degradações</a>
+      <a href="#Usuarios" style="color: rgb(20,20,20)">Usuarios</a>
+      <a href="<?=URL?>/adminController/actividades">Actividades</a>
+   </nav>
+   <div class="emitir">
+        <a href="<?=URL?>/adminController/actividades">emitir relatório<i class="fa fa-download"></i></a>
+   </div>
+   <div class="lista-deg-admin">
+   <?php 
+        foreach ($dados as $usuario) {
+            ?>
+      <div class="deg">
+        <div class="detalhes">
+            <h3><?=$usuario->nome?></h3>
+            <a href="<?=URL?>/usuarioController/perfil/<?=$usuario->id?>">E-mail: <br> <h4><?=$usuario->email?></h4></a>
+            <a href="<?=URL?>/usuarioController/perfil/<?=$usuario->id?>">telefone: <br> <h4><?=$usuario->telefone?></h4></a>
+            <p>Data de subscrição:</p>
+            <p><?=$usuario->data_registo?></p>
+            <a href="<?=URL?>/adminController/actividades2/<?=$usuario->id?>"><br> <h4>Ver actividades</h4></a>
+        </div>
+        <div class="config">
+            <a href="<?=URL?>/usuarioController/perfil/<?=$usuario->id?>"><i class="fa fa-eye"></i></a>
+            <a href=""><i class="fa fa-trash"></i></a>
+        </div>
+      </div>            
+              <?php
+        }
+   ?>
+
+   </div>
+   <?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+</section>
+
+
+........................DEG......................
+
+______________________DETALHES
+
+<?php
+
+if (!verificar::logado()) {
+
+      ?>
+      <header>
+        <div class="nav1">
+            <div class="logo"><a href="<?=URL?>"> <i class="fa fa-home"></i> voltar</a></div>
+            <nav> <a href="<?=URL?>/usuarioController/subscrever"><li>subscrever</li></a> <a href="<?=URL?>/usuarioController/login"><li>login</li></a> </nav>
+        </div>
+     </header>
+      <?php
+   }
+   else {
+      ?>
+    <header>
+        <div class="nav1">
+            <div class="logo">degMap</div>
+            <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="<?=URL?>/usuarioController/logout"><li>sair</li></a></nav>
+        </div>
+        <div class="nav2">
+            <a href="<?=URL?>/paginasController" ><i class="fa fa-home"></i> Home</a>
+            <a href="<?=URL?>/paginasController/mapa"><i class="fa fa-map"></i> Mapa</a>
+            <a href="<?=URL?>/degController/cadastrar"><i class="fa fa-camera"></i> Registar</a>
+        </div>
+    </header>
+  
+  <?php
+   
+  }
+
+  $deg=$dados['deg'];
+  $capa=$dados['capa'];
+  ?>
+    <section class="conteudo">
+        <div class="lista-deg">
+            <div class="deg">
+                <div class="capa" style="background-image: url(<?=URL?>/Public/Img/<?=$capa->nome?>);">
+                    <div class="capa-titulo">
+                        <h2><?=$deg->nome?></h2>
+                    </div>
+                </div>
+                <?php
+                    if (verificar::logado()) {
+                        if (isset($_SESSION['id_admin']) || isset($_SESSION['id_comum']) && $_SESSION['id_comum']==$deg->fk_usuario_id) {
+                            ?>
+                                 <a href="<?=URL?>/degController/Editar/<?=$deg->id?>"><button>Editar</button> </a>
+                            <?php
+                        }
+                    }
+
+                ?>
+               
+            </div>
+        </div>
+        <div class="detalhes">
+            <p> <?=$deg->descricao?> </p>
+            <h5>Comuna: <span><?=$deg->comuna?></span></h5>
+            <h5>Bairro: <span><?=$deg->bairro?></span></h5>
+            <h5>Rua: <span><?=$deg->rua?></span></h5>
+            <h5>Estado de degradação: <span><?=$deg->estado?></span></h5>
+            <h5>Intervenção: <span><?=$deg->intervencao?></span></h5>
+        </div>
+        <?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+    </section>
+
+________________________EDIT
+
+<?php
+
+if (!verificar::logado()) {
+    url::redireciona('PaginasController');
+}
+?>
+<header>
+        <div class="nav1">
+            <div class="logo">degMap</div>
+            <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="<?=URL?>/usuarioController/logout"><li>sair</li></a></nav>
+        </div>
+        <div class="nav2">
+            <a href="<?=URL?>/paginasController" ><i class="fa fa-home"></i> Home</a>
+            <a href="<?=URL?>/paginasController/mapa"><i class="fa fa-map"></i> Mapa</a>
+            <a href="<?=URL?>/degController/cadastrar" class=""><i class="fa fa-camera"></i> Registar</a>
+        </div>
+    </header>
+    <section class="conteudo">
+        <form action="<?=URL?>/degController/actualizar/<?=$dados['id']?>" method="POST" enctype="multipart/form-data">
+            <div>
+                <h2>Actualize os dados!</h2>
+                <label for="nome">Nome 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_nome'])){echo $dados['erro_nome'];} echo '';?></span>
+                </label>
+                <input type="text" name="nome" required maxlength=32 value="<?=$dados['nome']?>">
+                <label for="descricao">Descrição
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_descricao'])){echo $dados['erro_descricao'];} echo '';?></span>
+                </label>
+                <textarea name="descricao" id="" cols="30" rows="10" required><?=$dados['descricao']?></textarea>
+                <label for="estado">Estado de degradação</label>
+                <select name="estado" id="">
+                    <option value="Estágio Inicial">Estágio Inicial</option>
+                    <option value="Médio">Médio</option>
+                    <option value="Estágio Avançado">Estágio Avançado</option>
+                    <option value="Grave">Grave</option>
+                </select>
+                <label for="intervencao">Intervenção</label>
+                <select name="intervencao" id="">
+                    <option value="Nenhuma">Nenhuma intervenção</option>
+                    <option value="Em andamento">intervenção em andamento</option>
+                    <option value="Aplicada">Intervenção Aplicada</option>
+                </select>
+                <label for="comuna">Comuna 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_comuna'])){echo $dados['erro_comuna'];} echo '';?></span>
+                </label>
+                <input type="text" name="comuna" maxlength=32 value="<?=$dados['comuna']?>" required>
+                <label for="bairro">Bairro 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_bairro'])){echo $dados['erro_bairro'];} echo '';?></span>
+                </label>
+                <input type="text" name="bairro" maxlength=32 value="<?=$dados['bairro']?>" required>
+                <label for="rua">Rua 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_rua'])){echo $dados['erro_rua'];} echo '';?></span>
+                </label>
+                <input type="text" name="rua" maxlength=13 value="<?=$dados['rua']?>" required>
+                <button type="submit">actualizar</button>
+                <a href="<?=URL?>/degController/eliminarDeg/<?=$dados['id']?>"><button style="background: black;">Eliminar</a>
+            </div>
+        </form>
+        <?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+    </section>
+
+    _________________________FORM
+
+    <?php
+
+if (!verificar::logado()) {
+    url::redireciona('PaginasController');
+}
+?>
+<header>
+        <div class="nav1">
+            <div class="logo">degMap</div>
+            <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="../index.html"><li>sair</li></a></nav>
+        </div>
+        <div class="nav2">
+            <a href="<?=URL?>/paginasController" ><i class="fa fa-home"></i> Home</a>
+            <a href="<?=URL?>/paginasController/mapa"><i class="fa fa-map"></i> Mapa</a>
+            <a href="" class="activo"><i class="fa fa-camera"></i> Registar</a>
+        </div>
+    </header>
+    <section class="conteudo">
+        <form action="<?=URL?>/degController/cadastrar" method="POST" enctype="multipart/form-data">
+            <div>
+                <h2>Preencha os campos!
+                <br> <span style="color:red;" value=""><?php if(isset($dados['erro_geral'])){echo $dados['erro_geral'];} echo '';?></span>
+                </h2>
+                <label for="fotografia">Tire ou escolha uma fotografia.
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_foto'])){echo $dados['erro_foto'];} echo '';?></span>
+                </label>
+                <input type="file" name="foto[]" id="foto" >
+                <label for="nome">Nome 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_nome'])){echo $dados['erro_nome'];} echo '';?></span>
+                </label>
+                <input type="text" name="nome" required maxlength=32 value="<?=$dados['nome']?>">
+                <label for="descricao">Descrição
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_descricao'])){echo $dados['erro_descricao'];} echo '';?></span>
+                </label>
+                <textarea name="descricao" id="descricao" cols="30" rows="10" required><?=$dados['descricao']?></textarea>
+                <label for="estado">Estado de degradação</label>
+                <select name="estado" id="">
+                    <option value="Estágio Inicial">Estágio Inicial</option>
+                    <option value="Médio">Médio</option>
+                    <option value="Estágio Avançado">Estágio Avançado</option>
+                    <option value="Grave">Grave</option>
+                </select>
+                <label for="intervencao">Intervenção</label>
+                <select name="intervencao" id="">
+                    <option value="Nenhuma">Nenhuma intervenção</option>
+                    <option value="Em andamento">intervenção em andamento</option>
+                    <option value="Aplicada">Intervenção Aplicada</option>
+                </select>
+                <label for="comuna">Comuna 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_comuna'])){echo $dados['erro_comuna'];} echo '';?></span>
+                </label>
+                <input type="text" name="comuna" maxlength=32 value="<?=$dados['comuna']?>" required>
+                <label for="bairro">Bairro 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_bairro'])){echo $dados['erro_bairro'];} echo '';?></span>
+                </label>
+                <input type="text" name="bairro" maxlength=32 value="<?=$dados['bairro']?>" required>
+                <label for="rua">Rua 
+                *<br> <span style="color:red;" value=""><?php if(isset($dados['erro_rua'])){echo $dados['erro_rua'];} echo '';?></span>
+                </label>
+                <input type="text" name="rua" maxlength=32 value="<?=$dados['rua']?>" required>
+                <button type="submit">Registar</button>
+            </div>
+        </form>
+        <?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+    </section>
+
+
+........................PAGINAS................................
+
+___________________________FOOTER
+
+   <footer class="rodape">
+        <div class="menu-rodape">
+            
+                <li><a href="#">Voltar ao topo</a></li>
+                <li><a href="<?=URL?>/paginasCntroller/ajuda">Ajuda</a></li>
+                <li><a href="<?=URL?>/paginasCntroller/sobre">Sobre</a></li>
+                <?php 
+                   if (isset($_SESSION['id_admin'])) {
+                    ?>
+                     <li><a href="<?=URL?>/adminController">Painel do Administrador</a></li>
+                    <?php 
+                   }
+
+                   if (verificar::logado()) {
+                    ?>
+                    <li><a href="<?=URL?>/usuarioController/logout">Terminar sessão</a></li>
+                   <?php
+                    
+                   }
+                ?>
+
+        </div>
+        <div class="copy">copyright &copy 2023 degmap@gmail.com</div>
+    </footer>
+
+
+___________________________HOME
+
+<?php
+
+if (!verificar::logado()) {
+
+      ?>
+      <header>
+        <div class="nav1">
+            <div class="logo"><?=App_name?></div>
+            <nav> <a href="<?=URL?>/usuarioController/subscrever"><li>subscrever</li></a> <a href="<?=URL?>/usuarioController/login"><li>login</li></a> </nav>
+        </div>
+     </header>
+      <?php
+   }
+   else {
+      ?>
+      <header>
+      <div class="nav1">
+          <div class="logo"><?=App_name?></div>
+          <nav> <a href="<?=URL?>/usuarioController/perfil/<?=isset($_SESSION['id_admin'])?$_SESSION['id_admin']:$_SESSION['id_comum']?>"><li><i class="fa fa-user"></i></li></a> <a href="<?=URL?>/usuarioController/logout"><li>sair</li></a></nav>
+      </div>
+      <div class="nav2">
+          <a href="" class="activo"><i class="fa fa-home"></i> Home</a>
+          <a href="<?=URL?>/paginasController/mapa"> <i class="fa fa-map"></i> Mapa</a>
+          <a href="<?=URL?>/degController/cadastrar"><i class="fa fa-camera"></i> Registar</a>
+      </div>
+  </header>
+  
+  <?php
+   
+  }
+  ?>
+  <section class="conteudo">
+        <div class="lista-deg">
+        <?php
+            $degs=$dados['degs'];
+            $imagens=$dados['imagens'];
+            foreach ($degs as $deg) {
+                ?> 
+            <div class="deg">
+                <div class="capa " style="background-image: url(<?=URL?>/Public/Img/<?=$imagens[$deg->id]->nome?>);">
+                    <div class="capa-titulo">
+                        <h2><?=$deg->nome?></h2>
+                    </div>
+                </div>
+                <p style="font-size: 10pt; text-align:center; margin: 5px auto; color: rgb(20,20,20);"><?=$deg->data_registo?></p>
+                <a href="<?=URL?>/degController/detalhes/<?=$deg->id?>"> <button>Ver Detalhes</button> </a>
+            </div>
+                <?php
+            }
+   
+         ?>
+           
+        </div>
+        <?php
+include   App.'/Views/Paginas/footer.php';
+?> 
+    </section>
+
+_____________________
+

@@ -1,0 +1,68 @@
+form {
+    margin: 0 auto;
+    width: 80%;
+    padding: 10px;
+
+    div {
+        margin: 10px auto;
+
+        h2 {
+            font-size: 17pt;
+            text-align: center;
+            color: $azul;
+        }
+
+        input,
+        label {
+            display: block;
+        }
+
+        input {
+            line-height: 35px;
+        }
+
+        label {
+            margin-top: 20px;
+            color: $color2;
+            span{
+                color: $color2;
+            }
+        }
+
+        textarea,
+        input {
+            color: $color2;
+            border: $border $color2;
+            padding: 0 10px 0 10px;
+            background-color: transparent;
+            outline: none;
+            width: 100%;
+
+        }
+
+        select{
+            color: $color2;
+            option{
+                color: $color2;
+            }
+        }
+
+        button {
+            margin: 20px auto;
+            width: 100%;
+            line-height: 35px;
+            outline: none;
+            border: none;
+            border-radius: 5px;
+            color: $color1;
+            background-color: $color3;
+        }
+
+        a {
+            color: $azul;
+        }
+        p{
+            color: $color2;
+        }
+    }
+}

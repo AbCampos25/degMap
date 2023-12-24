@@ -1,0 +1,39 @@
+  $id=1;
+  $id_usuario=1;
+  $titulo='jey';
+  $texto='mais jey';  
+  
+  Atualização
+
+  $db->query("UPDATE post SET id_usuario=:id_usuario, titulo=:titulo, texto=:texto WHERE id=:id");
+  $db->bind(":id",$id);
+  $db->bind(":id_usuario",$id_usuario);
+  $db->bind(":titulo",$titulo);
+  $db->bind(":texto",$texto);
+  $db->executa();
+  
+  Inserir
+
+  $db->query("INSERT INTO post(id_usuario,titulo,texto) values(:id_usuario,:titulo,:texto)");
+  $db->bind(":id_usuario",$id_usuario);
+  $db->bind(":titulo",$titulo);
+  $db->bind(":texto",$texto);
+  $db->executa();
+
+  Deletar
+
+  $id=7;
+  $db->query("DELETE FROM post WHERE id<=:id");
+  $db->bind(":id",$id);
+  $db->executa();
+
+  Selecionar
+
+   $db->query("SELECT titulo,texto,data_criacao FROM post");
+   $resultado=$db->resultados();
+   
+   foreach ($resultado as $res) {
+    echo '<hr>titulo: '. $res->titulo;
+    echo '<hr>data: '. $res->data_criacao;
+  }
+

@@ -1,0 +1,296 @@
+..........................INDEX.........................
+
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #d4d4ce;
+  box-sizing: border-box;
+  font-size: 12pt;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  display: inline;
+  list-style: none;
+}
+
+body {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  body {
+    display: contents;
+    background: #182f4b;
+  }
+}
+.activo {
+  border: 1px solid #d4d4ce;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+}
+
+.capa {
+  width: 280px;
+  height: 150px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  margin: 5px;
+}
+
+.capa-titulo {
+  padding-top: 50px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.capa-titulo h2 {
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+header {
+  background-color: #182f4b;
+  color: #d4d4ce;
+  border-bottom: 1px solid #d4d4ce;
+  padding: 10px 10px 0 10px;
+  position: sticky;
+  top: 0;
+}
+header .nav1 {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+header .nav1 .logo, header .nav1 i {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+header .nav1 nav {
+  margin-right: 10px;
+  align-self: center;
+}
+header .nav1 nav a {
+  margin-right: 10px;
+  padding: 10px 5px;
+  text-decoration: underline;
+  font-weight: 200;
+}
+header .nav2 {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+header .nav2 a {
+  margin: 0 10px;
+  padding: 5px 10px;
+  font-weight: 200;
+}
+
+.conteudo {
+  background: #d4d4ce;
+  color: rgb(20, 20, 20);
+  min-height: 700px;
+}
+.conteudo .mapa {
+  width: 100%;
+  height: 600px;
+}
+.conteudo .user-foto {
+  text-align: center;
+}
+.conteudo .user-foto img {
+  margin: 30px auto 0 auto;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 5px solid #182f4b;
+}
+.conteudo .lista-deg .deg {
+  width: 100%;
+  border-bottom: 1px solid rgb(20, 20, 20);
+  padding: 10px;
+}
+.conteudo .lista-deg .deg .capa {
+  margin: 10px auto 5px auto;
+}
+.conteudo .lista-deg .deg button {
+  margin: 0 auto;
+  width: 100%;
+  line-height: 35px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  color: #d4d4ce;
+  background-color: #182f4b;
+}
+.conteudo .lista-deg .usuario-icon {
+  display: block;
+  text-align: center;
+  margin: 20px;
+}
+.conteudo .lista-deg .usuario-icon i {
+  font-size: 5rem;
+  color: rgb(117, 114, 114);
+}
+.conteudo .detalhes {
+  padding: 20px;
+}
+.conteudo .detalhes h5 {
+  color: rgb(7, 101, 207);
+  font-size: 16pt;
+  font-weight: 200;
+  margin-top: 5px;
+  border-bottom: 1px solid rgb(7, 101, 207);
+}
+.conteudo .detalhes h5 span {
+  font-weight: 200;
+  color: rgb(20, 20, 20);
+  font-size: 16pt;
+}
+.conteudo .detalhes p {
+  color: rgb(20, 20, 20);
+  font-size: 14pt;
+  text-align: justify;
+  margin-bottom: 10px;
+}
+.conteudo .menu-admin {
+  text-align: center;
+}
+.conteudo .menu-admin a {
+  margin: 5px 5px;
+  padding: 5px 0;
+  font-size: 14pt;
+  font-weight: bold;
+  border-bottom: 1px solid;
+  color: #182f4b;
+}
+.conteudo .emitir {
+  margin-top: 10px;
+  text-align: end;
+}
+.conteudo .emitir a {
+  margin-right: 10px;
+  color: #182f4b;
+  text-decoration: none;
+}
+.conteudo .emitir a i {
+  color: #182f4b;
+}
+.conteudo .lista-deg-admin {
+  color: rgb(20, 20, 20);
+  border-top: 1px solid;
+  margin-top: 10px;
+}
+.conteudo .lista-deg-admin .deg {
+  color: rgb(20, 20, 20);
+  border-bottom: 1px solid;
+  margin: 10px 5px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+.conteudo .lista-deg-admin .deg .detalhes h3 {
+  color: rgb(20, 20, 20);
+  font-size: 14pt;
+}
+.conteudo .lista-deg-admin .deg .detalhes a {
+  font-size: 14pt;
+  text-decoration: none;
+  border: none;
+  color: rgb(20, 20, 20);
+}
+.conteudo .lista-deg-admin .deg .detalhes a h4 {
+  font-size: 13pt;
+  color: #182f4b;
+  font-weight: bold;
+  border-bottom: none;
+}
+.conteudo .lista-deg-admin .deg .detalhes p {
+  margin-top: 10px;
+}
+.conteudo .lista-deg-admin .deg .config i {
+  color: rgb(20, 20, 20);
+  font-size: 16pt;
+  margin: 30px 5px;
+}
+.conteudo .rodape {
+  background-color: rgb(20, 20, 20);
+  padding: 10px 0;
+}
+.conteudo .rodape .menu-rodape {
+  text-align: center;
+}
+.conteudo .rodape .menu-rodape li {
+  display: block;
+  margin-bottom: 10px;
+}
+.conteudo .rodape .copy {
+  text-align: center;
+  color: rgb(7, 101, 207);
+}
+
+form {
+  margin: 0 auto;
+  width: 80%;
+  padding: 10px;
+}
+form div {
+  margin: 10px auto;
+}
+form div h2 {
+  font-size: 17pt;
+  text-align: center;
+  color: rgb(7, 101, 207);
+}
+form div input,
+form div label {
+  display: block;
+}
+form div input {
+  line-height: 35px;
+}
+form div label {
+  margin-top: 20px;
+  color: rgb(20, 20, 20);
+}
+form div label span {
+  color: rgb(20, 20, 20);
+}
+form div textarea,
+form div input {
+  color: rgb(20, 20, 20);
+  border: 1px solid rgb(20, 20, 20);
+  padding: 0 10px 0 10px;
+  background-color: transparent;
+  outline: none;
+  width: 100%;
+}
+form div select {
+  color: rgb(20, 20, 20);
+}
+form div select option {
+  color: rgb(20, 20, 20);
+}
+form div button {
+  margin: 20px auto;
+  width: 100%;
+  line-height: 35px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  color: #d4d4ce;
+  background-color: #182f4b;
+}
+form div a {
+  color: rgb(7, 101, 207);
+}
+form div p {
+  color: rgb(20, 20, 20);
+}/*# sourceMappingURL=index.css.map */

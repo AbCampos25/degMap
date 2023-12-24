@@ -1,0 +1,180 @@
+.conteudo {
+    background: $color1;
+    color: $color2;
+    min-height: 700px;
+
+    .mapa{
+        width: 100%;
+        height: 600px;
+    }
+    .user-foto{
+        text-align: center;
+        img{
+            margin: 30px auto 0 auto;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid $color3;
+
+        }
+    }
+    .lista-deg {
+        .deg {
+            width: 100%;
+            border-bottom: $border $color2;
+            padding: 10px;
+
+            .capa {
+                margin: 10px auto 5px auto;
+            }
+
+            button {
+                margin: 0 auto;
+                width: 100%;
+                line-height: 35px;
+                outline: none;
+                border: none;
+                border-radius: 5px;
+                color: $color1;
+                background-color: $color3;
+            }
+
+            
+        }
+        .usuario-icon{
+            display: block;
+            text-align: center;
+            margin: 20px;
+            i{
+                font-size: 5rem;
+                color: $cinza
+            }
+        }
+    }
+
+    .detalhes{
+        padding: 20px;
+        h5{
+            
+            color: $azul;
+            font-size: 16pt;
+            font-weight: 200;
+            margin-top: 5px;
+            border-bottom: $border $azul; 
+            span{
+                font-weight: 200;
+                color: $color2;
+                font-size: 16pt;
+            }
+        }
+        
+        p{
+            color: $color2;
+            font-size: 14pt;
+            text-align: justify;
+            margin-bottom: 10px;
+        }
+    }
+
+    .menu-admin{
+        text-align: center;
+        a{
+            margin: 5px 5px;
+            padding: 5px 0;
+            font-size: 14pt;
+            font-weight: bold;
+            border-bottom: $border;
+            color: $color3;            
+            
+        }
+    }
+    .emitir{
+        margin-top: 10px;
+        text-align: end;
+        a{
+            margin-right: 10px;
+            color: $color3;
+            text-decoration: none;
+            i{
+                color: $color3;
+                
+            }
+        }
+    }
+    .lista-deg-admin{
+        color: $color2;
+        border-top: $border;
+        margin-top: 10px;
+        .deg{
+            color: $color2;
+            border-bottom: $border;
+            margin: 10px 5px;
+            @include flexBoxRow(space-between);
+            .detalhes{
+                h3{
+                    color: $color2;
+                    font-size: 14pt;
+                }
+                a{
+                    font-size: 14pt;
+                    text-decoration: none;
+                    border: none;
+                    color: $color2;
+                    h4{
+                        font-size: 13pt;
+                        color: $color3;
+                        font-weight: bold;
+                        border-bottom: none;
+                    }
+                }
+                p{
+                    margin-top: 10px;
+                }
+            }
+            .config{
+                i{
+                    color: $color2;
+                    font-size: 16pt;
+                    margin: 30px 5px;
+                }
+            }
+        }
+    }
+
+    .rodape{
+        background-color: $color2;
+        padding: 10px 0;
+        .menu-rodape{
+            text-align: center;
+            li{
+                display: block;
+                margin-bottom: 10px;
+            }
+        }
+        .copy{
+            text-align: center;
+            color: $azul;
+        }
+    }
+    .ajuda{
+        color: $color2;
+        padding: 10px;
+        text-align: center;
+        h1{
+            margin-top: 30px;
+            color: $color3;
+            font-size: 16pt;
+        }
+        p{
+            color: $color2;
+            font-size: 13pt;
+            text-align: justify;
+        }
+        img{
+            width: 250px;
+            margin: 0 auto;
+        }
+    }
+
+   
+}

@@ -1,0 +1,938 @@
+----------------CONTROLLERS
+
+
+...............ADMIN..................
+
+<?php
+class adminController extends Controller{
+
+   public function __construct(){
+      $this->usuarioModel=$this->model('usuarioModel');
+      $this->degModel=$this->model('degModel');
+      $this->sessaoModel=$this->model('sessaoModel');
+   }
+  
+  
+   public function index(){
+
+      $degs=$this->degModel->todasDeg();
+      $usuarios = array();
+      
+      foreach ($degs as $deg) {
+         $usuarios[$deg->fk_usuario_id] = $this->usuarioModel->umUsuario($deg->fk_usuario_id);
+      }
+      
+      $dados=[
+         'degs'=>$degs,
+         'usuarios'=>$usuarios
+      ];
+
+      $this->view('admin/painel-degs', $dados);
+
+  }
+   
+   
+   //.........BUSCA DE USUARIOS E ACTIVIDADES...............
+
+
+    public function usuarios(){
+      $dados=$this->usuarioModel->todosUsuarios();
+      $this->view('admin/painel-usuarios', $dados);
+    }
+   
+   
+    public function eliminarUsuario($id){
+        if (isset($_SESSION['id_admin'])) {
+            
+            $degs = $this->degModel->todasDegDeUmUsuario($id);
+        
+            foreach ($degs as $deg) {
+                $this->degModel->eliminarImagensDeUmaDeg($deg->id);
+                
+            }
+            $this->usuarioModel->eliminar($id);
+            $this->degModel->eliminarDegsDeUmUsuario($id);
+            $this->usuarioModel->eliminarSessoesDeUmUsuario($id);
+          
+          $actividade='O usuário com id '.$id.' foi eliminado pelo admin '. $_SESSION['id_admin'];
+          $dados=[
+             'actividade'=> $actividade, 
+             'id_usuario'=> $_SESSION['id_admin']
+          ];
+          $this->sessaoModel->armazenar($dados);
+        }
+        $this->usuarios();
+    }
+
+    
+    public function eliminarDeg($id){
+       $info=$this->degModel->umaDeg($id);
+       $this->degModel->eliminar($id);
+       $this->degModel-> eliminarImagensDeUmaDeg($id);
+      
+      $actividade='A degradação ('.$info->nome.') foi eliminado pelo admin '. $_SESSION['id_admin'];
+      $dados=[
+         'actividade'=> $actividade, 
+         'id_usuario'=> $_SESSION['id_admin']
+      ];
+      $this->sessaoModel->armazenar($dados);
+      $this->index();
+    }
+
+
+    public function actividades(){
+      $dados=$this->sessaoModel->todasSessoes();
+      $this->view('admin/painel-actividades', $dados);
+
+    }
+    public function actividades2($id){
+      $dados=[
+         'usuario'=>$this->usuarioModel->umUsuario($id),
+         'actividades'=>$this->sessaoModel->todasSessoesDeUmUsuario($id)
+      ];
+      $this->view('admin/painel-actividades2', $dados);
+
+    }
+
+    //............RELATORIOS DE TUDO.....................
+
+    public function actividadesRelatorioDeUmUsuario($id){
+      $dados=[
+         'usuario'=>$this->usuarioModel->umUsuario($id),
+         'actividades'=>$this->sessaoModel->todasSessoesDeUmUsuario($id)
+      ];
+      $this->view('admin/relatorio-actividades', $dados);
+
+    }
+    
+    
+    public function relatorioActividades(){
+      $dados= $this->sessaoModel->todasSessoes();
+      $this->view('admin/relatorio-actividades', $dados);
+
+    }
+
+
+    public function relatorioUsuarios(){
+
+      $dados=$this->usuarioModel->todosUsuarios();
+      $this->view('admin/relatorio-usuarios', $dados);
+
+    }
+    public function relatorioDegs(){
+
+      $degs=$this->degModel->todasDeg();
+      $usuarios = array();
+      
+      foreach ($degs as $deg) {
+         $usuarios[$deg->fk_usuario_id] = $this->usuarioModel->umUsuario($deg->fk_usuario_id);
+      }
+      
+      $dados=[
+         'degs'=>$degs,
+         'usuarios'=>$usuarios
+      ];
+      $this->view('admin/relatorio-degs', $dados);
+
+    }
+
+    //...........EDIÇÃO DEG......................
+    
+    public function actualizar($id){
+
+      $formulario=filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+      $dados=[];
+         if (isset($formulario)) {
+             $dados=[
+                'id'=>$id,
+                'nome'=>trim($formulario['nome']),
+                'comuna'=>trim($formulario['comuna']),
+                'bairro'=>trim($formulario['bairo']),
+                'rua'=>trim($formulario['rua']),
+                'descricao'=>trim($formulario['descricao']),
+                'estado'=>trim($formulario['estado']),
+                'intervencao'=>trim($formulario['intervencao']),
+                'rua'=>trim($formulario['rua'])
+             ];
+
+          if (in_array("", $dados)) {
+               if (empty($dados['nome'])) {
+                  $dados['erro_nome']='Insira o nome, por favor.';
+               }
+               else {
+                  $dados['erro_nome']='';
+               }
+               if (empty($dados['destricao'])) {
+                  $dados['erro_descricao']='Por favor, descreva sobre o que está a ocorrer';
+               }
+               else {
+                  $dados['erro_descricao']='';
+               }
+               if (empty($dados['estado'])) {
+                  $dados['erro_estado']='campo obrigatório';
+               }
+               else {
+                  $dados['erro_estado']='';
+               }
+               if (empty($dados['intervencao'])) {
+                  $dados['erro_intervencao']='campo obrigatório';
+               }
+               
+               else {
+                  $dados['erro_intervencao']='';
+               }
+
+
+               if (empty($dados['comuna'])) {
+                  $dados['erro_comuna']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_comuna']='';
+               }
+               if (empty($dados['bairro'])) {
+                  $dados['erro_bairro']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_bairro']='';
+               }
+               if (empty($dados['rua'])) {
+                  $dados['erro_rua']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_rua']='';
+               }
+            }
+
+         else{
+                      
+                    $this->degModel->actualizar($dados);
+                    $info=$this->degModel->umaDeg($id);
+                   
+                    $actividade='A degradação ('.$info->nome.') foi Editada pelo usuario '.$_SESSION['id_admin'];
+                    $dados=[
+                       'actividade'=> $actividade, 
+                       'id_usuario'=> $_SESSION['id_admin']
+                    ];
+                    $this->sessaoModel->armazenar($dados);
+
+                    $this->index();
+             
+          } 
+
+          $this->view('Deg/deg-form', $dados);
+     }
+     
+   }
+   
+}
+
+
+......................USUARIO..................
+
+
+<?php
+class usuarioController extends Controller{
+
+   public function __construct(){
+      $this->usuarioModel=$this->model('usuarioModel');
+      $this->degModel=$this->model('degModel');
+      $this->sessaoModel=$this->model('sessaoModel');
+   }
+  
+  
+   public function index(){
+
+      $degs=$this->degModel->todasDeg();
+      $imagens = array();
+      
+      foreach ($degs as $deg) {
+         $imagens[$deg->id] = $this->degModel->umaImagemDeUmaDeg($deg->id);
+      }
+      
+      $dados=[
+         'degs'=>$degs,
+         'imagens'=>$imagens
+      ];
+
+      $this->view('Paginas/home', $dados);
+
+  }
+   
+  
+  
+  //.......SUBINSCRIÇÃO E INSUBINSCRIÇÃO............
+
+
+   public function subscrever(){
+
+      $formulario=filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+      if (isset($formulario)) {
+          $dados=[
+             'nome'=>trim($formulario['nome']),
+             'telefone'=>trim($formulario['telefone']),
+             'email'=>trim($formulario['email']),
+             'senha'=>trim($formulario['senha']),
+             'senha2'=>trim($formulario['senha2'])
+          ];
+
+       if (in_array("", $dados)) {
+            if (empty($dados['nome'])) {
+               $dados['erro_nome']='campo obrigatório';
+            }
+            else {
+               $dados['erro_nome']='';
+            }
+            if (empty($dados['telefone'])) {
+               $dados['erro_telefone']='campo obrigsório';
+            }
+            else {
+               $dados['erro_telefone']='';
+            }
+            if (empty($dados['email'])) {
+               $dados['erro_email']='campo obrigsório';
+            }
+            else {
+               $dados['erro_email']='';
+            }
+            if (empty($dados['senha'])) {
+               $dados['erro_senha']='campo obrigatório';
+            }
+            
+            else {
+               $dados['erro_senha']='';
+            }
+
+
+            if (empty($dados['senha2'])) {
+               $dados['erro_senha2']='confirme a senha';
+            }
+
+            else {
+               $dados['erro_senha2']='';
+            }
+         }
+
+      else{
+
+           if (verificar::email($dados['email'])) {
+            $dados['erro_email']='E-mail inválido!';
+           }
+           elseif (strlen($dados['senha'])<6) {
+            $dados['erro_senha']='6 caracteres no minimo';
+         }
+
+           elseif ($dados['senha2']!=$dados['senha']) {
+            $dados['erro_senha2']='a senha deve ser igual';
+         }
+           elseif ($this->usuarioModel->existeEmail($dados['email'])) {
+            $dados['erro_email']='E-mail ja existente!';
+         }
+   
+           else { 
+              
+            $dados['senha']= md5($dados['senha']);
+              if ($this->usuarioModel->armazenar($dados)) {
+               $usuario=$this->usuarioModel->loginValido($dados['email'],$dados['senha2']);
+                     if ($usuario) {
+                     $this->sessaoUsuario($usuario);
+                     }
+
+                  }
+
+               }  
+
+               
+            } 
+          
+     }
+
+
+
+      else {
+         $dados=[
+             'nome'=>'',
+             'telefone'=>'',
+             'email'=> '',
+             'senha'=> '',
+             'senha2'=> '',
+             'erro_nome'=>'',
+             'erro_telefone'=>'',
+             'erro_email'=> '',
+             'erro_senha'=> '',
+             'erro_senha2'=> ''
+          ];             
+      }
+      
+     $this->view('Usuarios/subscricao', $dados);
+   }
+
+     public function insubscrever($id){
+      if (isset($_SESSION['id_admin']) || isset($_SESSION['id_comum']) && $_SESSION['id_comum']==$id) {
+         $this->usuarioModel->eliminar($id);
+         $actividade='O usuário com id '.$id.' foi insubinscrito';
+         $dados=[
+            'actividade'=> $actividade, 'id_usuario'=>$id
+         ];
+         $this->sessaoModel->armazenar($dados);
+         $this->logout();
+      }
+
+      else {
+         $this->index();
+      }
+   }
+
+   
+   //.........BUSCA DE USUARIOS E ACTIVIDADES........
+
+
+    public function usuariosSubinscritos(){
+      $dados=$this->usuarioModel->todosUsuarios();
+      $this->view('Usuarios/lista-usuarios', $dados);
+    }
+    
+    public function perfil($id){
+      $usuario=$this->usuarioModel->umUsuario($id);
+      $degs=$this->degModel->todasDegDeUmUsuario($id);
+      $imagens = array();
+      
+      foreach ($degs as $deg) {
+         $imagens[$deg->id] = $this->degModel->umaImagemDeUmaDeg($deg->id);
+      }
+      $dados=[
+         'usuario'=>$usuario,
+         'degs'=>$degs,
+         'imagens'=>$imagens
+      ];
+
+      $this->view('Usuarios/perfil-usuario', $dados);
+    }
+
+
+    public function actividades($id){
+      $dados=$this->sessaoModel->todasSessoesDeUmUsuario($id);
+      $this->view('Usuarios/actividades', $dados);
+
+    }
+
+
+    //.....LOGIN E LOGOUT..........................
+
+    public function login(){
+      $formulario=filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+        if (isset($formulario)) {
+               $dados=[
+                  'email'=>trim($formulario['email']),
+                  'senha'=>trim($formulario['senha'])
+               ];
+
+            if (in_array("", $dados)) {
+      
+                  if (empty($dados['email'])) {
+                     $dados['erro_email']='campo obrigsório';
+                  }
+                  else {
+                     $dados['erro_email']='';
+                  }
+                  if (empty($dados['senha'])) {
+                     $dados['erro_senha']='campo obrigatório';
+                  }
+                  
+                  else {
+                     $dados['erro_senha']='';
+                  }
+
+               }
+
+            else{
+               
+
+               if (verificar::email($dados['email'])) {
+                  $dados['erro_email']='E-mail inválido!';
+               }
+               elseif (strlen($dados['senha'])<6) {
+                  $dados['erro_senha']='6 caracteres no minimo';
+               }
+
+               elseif ($this->usuarioModel->existeEmail($dados['email'])) {
+                     $usuario=$this->usuarioModel->loginValido($dados['email'], $dados['senha']);
+                    if ($usuario) {
+                      $this->sessaoUsuario($usuario);
+                    }
+                    else {
+                     $dados['erro_senha']='senha errada';
+                    }
+              
+               }
+               
+               else $dados['erro_email']='conta inexistente!';
+ 
+            }
+ 
+        }
+         
+        else {
+            $dados=[
+               'email'=> '',
+               'senha'=> '',
+               'erro_senha'=> '',
+               'erro_email'=> '',
+            ];             
+            
+         }
+     
+      $this->view('Usuarios/login', $dados );
+     
+   }
+  
+   private function sessaoUsuario($usuario){
+
+      if ($usuario->id==45) {
+         $_SESSION['id_admin']=$usuario->id;
+         $_SESSION['nome']=$usuario->nome;
+         $_SESSION['telefone']=$usuario->telefone;
+         $_SESSION['email']=$usuario->email;
+      }
+      else {
+         $_SESSION['id_comum']=$usuario->id;
+         $_SESSION['nome']=$usuario->nome;
+         $_SESSION['telefone']=$usuario->telefone;
+         $_SESSION['email']=$usuario->email;
+      }
+      url::redireciona('Paginas');
+   }
+
+   public function logout(){
+      $id_usuario= isset($_SESSION['id_comum'])? $_SESSION['id_comum']:$_SESSION['id_admin'];
+      unset($_SESSION);
+      session_destroy();
+      $actividade='O usuário com id '.$id_usuario.' terminou sessão.';
+      $dados=[
+         'actividade'=> $actividade, 'id_usuario'=>$id_usuario
+      ];
+      $this->sessaoModel->armazenar($dados);
+      url::redireciona('paginasController');
+   }
+   
+}
+
+
+......................DEG.......................
+
+
+<?php
+class degController extends Controller{
+
+   public function __construct(){
+      $this->usuarioModel=$this->model('usuarioModel');
+      $this->degModel=$this->model('degModel');
+      $this->sessaoModel=$this->model('sessaoModel');
+   }
+  
+  
+   //.........LEVA PARA A PÉGINA DE DEGRADAÇÕES
+   public function index(){
+
+      $degs=$this->degModel->todasDeg();
+      $imagens = array();
+      
+      foreach ($degs as $deg) {
+         $imagens[$deg->id] = $this->degModel->umaImagemDeUmaDeg($deg->id);
+      }
+      
+      $dados=[
+         'degs'=>$degs,
+         'imagens'=>$imagens
+      ];
+
+      $this->view('Paginas/home', $dados);
+
+  }
+   
+  
+  
+  //.......CADASTRAMENTO DE DEGRADAÇÃO............
+
+
+   public function cadastrar(){
+
+      $formulario=filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+      $dados=[];
+
+
+         if (isset($formulario)) {
+             
+             $dados=[
+                'nome'=>trim($formulario['nome']),
+                'comuna'=>trim($formulario['comuna']),
+                'bairro'=>trim($formulario['bairro']),
+                'rua'=>trim($formulario['rua']),
+                'descricao'=>trim($formulario['descricao']),
+                'estado'=>trim($formulario['estado']),
+                'intervencao'=>trim($formulario['intervencao']),
+                'altitude'=>'1',
+                'longitude'=>'2',
+                'id_usuario'=> (isset($_SESSION['id_admin']))?$_SESSION['id_admin']:$_SESSION['id_comum']
+             ];
+
+          if (in_array("", $dados)) {
+               if (empty($dados['nome'])) {
+                  $dados['erro_nome']='Insira o nome, por favor.';
+               }
+               else {
+                  $dados['erro_nome']='';
+               }
+               if (empty($dados['descricao'])) {
+                  $dados['erro_descricao']='Por favor, descreva sobre o que está a ocorrer';
+               }
+               else {
+                  $dados['erro_descricao']='';
+               }
+               if (empty($dados['estado'])) {
+                  $dados['erro_estado']='campo obrigatório';
+               }
+               else {
+                  $dados['erro_estado']='';
+               }
+               if (empty($dados['intervencao'])) {
+                  $dados['erro_intervencao']='campo obrigatório';
+               }
+               
+               else {
+                  $dados['erro_intervencao']='';
+               }
+
+
+               if (empty($dados['comuna'])) {
+                  $dados['erro_comuna']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_comuna']='';
+               }
+               if (empty($dados['bairro'])) {
+                  $dados['erro_bairro']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_bairro']='';
+               }
+               if (empty($dados['rua'])) {
+                  $dados['erro_rua']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_rua']='';
+               }
+            }
+
+         else{
+              $existe=$this->degModel->jaExiste($dados);
+              if ($existe) {
+               $dados['erro_geral']='Esta degração já se encontra cadastrada';
+              }
+      
+              else { 
+                  if (!isset($_FILES["foto"])) {
+                     $dados['erro_foto']='tire ou esolha uma foto';
+                  }
+                  else {
+                     $foto=array();
+                     if(isset($_FILES["foto"])){
+                         for($i=0;$i<count($_FILES["foto"]["name"]);$i++){
+              
+                      //SALVAR DENTRO DE UMA PASTA
+              
+                       $nome_arq=md5($_FILES["foto"]["name"][$i].rand(1,999)).'.jpg';
+                       move_uploaded_file($_FILES["foto"]["tmp_name"][$i],'../Public/Img/'.$nome_arq);
+                      
+                       //SALVAR NOMES PARA O BANCO DE DADOS
+              
+                        array_push($foto,$nome_arq );
+                         }
+                     }
+                     if ($this->degModel->armazenar($dados, $foto)) {
+                        $id= (isset($_SESSION['id_admin']))?$_SESSION['id_admin']:$_SESSION['id_comum'];                   
+                        $actividade='A degradação ('.$dados['nome'].') foi cadastrada pelo usuario com id ->'.$id;
+                        $relato=[
+                           'actividade'=> $actividade, 
+                           'id_usuario'=> $id
+                        ];
+                          $this->sessaoModel->armazenar($relato);
+                          url::redireciona('paginasController');
+                     }
+
+                  }
+                
+
+
+               }  
+
+               
+            } 
+             
+             
+        }
+        else {
+         $dados=[
+             'nome'=>'',
+             'descricao'=>'',
+             'estado'=> '',
+             'intervencao'=> '',
+             'comuna'=> '',
+             'bairro'=> '',
+             'rua'=> '',
+             'erro_nome'=>'',
+             'erro_descricao'=>'',
+             'erro_geral'=>'',
+             'erro_estado'=> '',
+             'erro_intervencao'=> '',
+             'erro_comuna'=> '',
+             'erro_bairro'=> '',
+             'erro_rua'=> '',
+             'erro_foto'=> '',
+          ];             
+      }
+
+      $this->view('Deg/deg-form', $dados); 
+
+         
+    }
+
+    //..............EDIÇÃO.........................
+    
+    
+    //REDIRECIANA PARA A PÁGINA DE EDIÇÃO
+    public function Editar($id){
+        $deg=$this->degModel->umaDeg($id);
+        $dados=[
+         'id'=>$deg->id,
+         'nome'=>$deg->nome,
+         'comuna'=>$deg->comuna,
+         'bairro'=>$deg->bairro,
+         'rua'=>$deg->rua,
+         'descricao'=>$deg->descricao,
+         'estado'=>$deg->estado,
+         'intervencao'=>$deg->intervencao
+      ];
+        $this->view('Deg/deg-edit', $dados);
+    }
+    
+    
+    //REDIRECIONA PARA O FORMULARIO DE CADASTRO
+    public function formulario(){
+        $this->view('Deg/deg-form');
+    }   
+   
+    //ACTUALIZA OS DADOS DA DEGRADAÇÃO
+    public function actualizar($id){
+
+      $formulario=filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+      $dados=[];
+         if (isset($formulario)) {
+             $dados=[
+                'id'=>$id,
+                'nome'=>trim($formulario['nome']),
+                'comuna'=>trim($formulario['comuna']),
+                'bairro'=>trim($formulario['bairro']),
+                'rua'=>trim($formulario['rua']),
+                'descricao'=>trim($formulario['descricao']),
+                'estado'=>trim($formulario['estado']),
+                'intervencao'=>trim($formulario['intervencao'])
+             ];
+
+          if (in_array("", $dados)) {
+               if (empty($dados['nome'])) {
+                  $dados['erro_nome']='Insira o nome, por favor.';
+               }
+               else {
+                  $dados['erro_nome']='';
+               }
+               if (empty($dados['descricao'])) {
+                  $dados['erro_descricao']='Por favor, descreva sobre o que está a ocorrer';
+               }
+               else {
+                  $dados['erro_descricao']='';
+               }
+               if (empty($dados['estado'])) {
+                  $dados['erro_estado']='campo obrigatório';
+               }
+               else {
+                  $dados['erro_estado']='';
+               }
+               if (empty($dados['intervencao'])) {
+                  $dados['erro_intervencao']='campo obrigatório';
+               }
+               
+               else {
+                  $dados['erro_intervencao']='';
+               }
+
+
+               if (empty($dados['comuna'])) {
+                  $dados['erro_comuna']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_comuna']='';
+               }
+               if (empty($dados['bairro'])) {
+                  $dados['erro_bairro']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_bairro']='';
+               }
+               if (empty($dados['rua'])) {
+                  $dados['erro_rua']='campo obrigatório';
+               }
+
+               else {
+                  $dados['erro_rua']='';
+               }
+            }
+
+         else{
+                      
+                    $this->degModel->actualizar($dados);
+                    $info=$this->degModel->umaDeg($id);
+                   
+                    $id= (isset($_SESSION['id_admin']))?$_SESSION['id_admin']:$_SESSION['id_comum'];                   
+                    $actividade='A degradação ('.$info->nome.') foi Editada pelo usuario com id '.$id;
+                    $relato=[
+                       'actividade'=> $actividade, 
+                       'id_usuario'=> $id
+                    ];
+                      $this->sessaoModel->armazenar($relato);
+
+                    url::redireciona('degController/detalhes/'.$info->id);
+             
+          } 
+
+          
+     }
+     else {
+      $dados=[
+          'nome'=>'',
+          'descricao'=>'',
+          'estado'=> '',
+          'intervencao'=> '',
+          'comuna'=> '',
+          'bairro'=> '',
+          'rua'=> '',
+          'erro_nome'=>'',
+          'erro_descricao'=>'',
+          'erro_geral'=>'',
+          'erro_estado'=> '',
+          'erro_intervencao'=> '',
+          'erro_comuna'=> '',
+          'erro_bairro'=> '',
+          'erro_rua'=> '',
+       ];             
+   }
+
+   $this->view('Deg/deg-edit', $dados); 
+
+     
+   }
+
+   
+   //.........BUSCA DETALHES DE UMA DEGRADAÇÃO........
+    
+    public function detalhes($id){
+      $dados=[
+         'deg'=>$this->degModel->umaDeg($id),
+         'capa'=>$this->degModel->umaimagemDeUmaDeg($id),
+         'imagens'=>$this->degModel->todasImagensDeUmaDeg($id)
+      ];
+
+      $this->view('Deg/deg-detalhes', $dados);
+    }
+
+    //............ELIMINA UMA DEGRADAÇÃO................
+    
+    public function eliminarDeg($id){
+        $info=$this->degModel->umaDeg($id);
+        $this->degModel->eliminar($id);
+        $id_us= (isset($_SESSION['id_admin']))?$_SESSION['id_admin']:$_SESSION['id_comum'];
+        $actividade='A degradação ('.$info->nome.') foi eliminado pelo usuario '.$id_us;
+        $dados=[
+           'actividade'=> $actividade, 
+           'id_usuario'=> $id_us
+         ];
+         $this->sessaoModel->armazenar($dados);
+         $this->degModel-> eliminarImagensDeUmaDeg($id);
+       
+       $this->index();
+     }
+    
+}
+
+
+
+.......................PAGINAS..........................
+
+
+<?php
+class paginasController extends Controller{
+
+   public function __construct(){
+      $this->usuarioModel=$this->model('usuarioModel');
+      $this->degModel=$this->model('degModel');
+      $this->sessaoModel=$this->model('sessaoModel');
+   }
+  
+  
+   public function index(){
+
+      $degs=$this->degModel->todasDeg();
+      $imagens = array();
+      
+      foreach ($degs as $deg) {
+         $imagens[$deg->id] = $this->degModel->umaImagemDeUmaDeg($deg->id);
+      }
+      
+      $dados=[
+         'degs'=>$degs,
+         'imagens'=>$imagens
+      ];
+
+      $this->view('Paginas/home', $dados);
+
+  }
+
+
+   public function mapa(){
+
+      $this->view('Paginas/mapa', $dados=[]);
+
+  }
+   public function sobre(){
+
+      $this->view('Paginas/sobre');
+
+  }
+
+  
+   public function ajuda(){
+
+      $this->view('Paginas/ajuda');
+
+  }
+   public function politicaDePrivacidade(){
+
+      $this->view('Paginas/politica-privacidade');
+
+  }
+   public function termos(){
+
+      $this->view('Paginas/termos');
+
+  }
+
+}
